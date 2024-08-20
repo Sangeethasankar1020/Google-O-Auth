@@ -1,8 +1,10 @@
 import "./App.css";
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 
 function App() {
+  const navigate = useNavigate();
   const handleSuccess = async (credentialResponse) => {
     try {
       // // Import jwt-decode dynamically
@@ -16,6 +18,15 @@ function App() {
       const decoded = jwtDecode(credentialResponse.credential);
 
       console.log("User Info:", decoded);
+      localStorage.setItem("userName", decoded.name);
+      localStorage.setItem("userEmail", decoded.email);
+      localStorage.setItem("userPicture", decoded.picture);
+
+      // Set authentication flag
+      localStorage.setItem("isAuthenticated", true);
+
+      // Navigate to dashboard
+      navigate("/dashboard");
     } catch (error) {
       console.error("Decoding error:", error);
     }
